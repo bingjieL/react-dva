@@ -1,0 +1,63 @@
+@import '~@/assets/less/variable.less';
+.mixinTitle(@color, @bjColor, @borderColor) {
+  height: @header-height;
+  line-height: @header-height;
+  text-align: center;
+  box-sizing: border-box;
+  font-size:  18px;
+  border-bottom: 1px solid @borderColor;
+  background: @bjColor;
+  color: @color;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  h3{
+    color: @color;
+    margin: 0;
+  }
+  .titleLogo{
+    width: 32px;
+    height: 32px;
+    margin-right: 10px; 
+  }
+}
+
+.menu{
+  height: 100%;
+  position: relative;
+  ul {
+    height: calc(100% - @header-height);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 50px; 
+  }
+  .titleLight{
+    .mixinTitle(@title-color-light, @title-bj-light, @title-border-light);
+  }
+  
+  .titleDark{
+    .mixinTitle(@title-color-dark, @title-bj-dark, @title-border-dark);
+  }
+  .switch{
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    bottom: 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    .swichTitle{
+      color: @basic-color;
+    } 
+  }
+  .foldBtn{
+    z-index: 10;
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    i{
+      font-size: 20px;
+    }
+  }
+}
