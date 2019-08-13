@@ -4,6 +4,7 @@ import { Menu, Icon, Switch} from 'antd';
 import * as style from './menuContent.less'
 import { connectSate } from 'models/connect';
 import Logo from 'assets/images/logo.png'
+import { Link } from 'dva/router';
 
 const SubMenu = Menu.SubMenu;
 
@@ -15,9 +16,6 @@ class MenuContent extends React.Component<any,Istate> {
   public readonly state: Readonly<Istate> = {
     theme: 'dark'
   }
-  public subJumpToRouter(value: string) {
-    this.props.jumpToRouter(value)
-  }
   public toggleCollapsed = (): void => {
     this.props.dispatch({type: 'globalData/dealFold', payload:{} })
   }
@@ -28,6 +26,7 @@ class MenuContent extends React.Component<any,Istate> {
   }
   render() {
     const {dataSource} = this.props
+    // console.log('---> chilrenopenkey', this.props.defaultOpenKeys)
     return (
       <div className={style.menu}>
         <div className={ this.state.theme === 'light'? style.titleLight : style.titleDark}>
@@ -67,13 +66,15 @@ class MenuContent extends React.Component<any,Istate> {
               <SubMenu key={item.key} title={<span><Icon type={item.icon} /><span>{item.name}</span></span>}>
                 {
                   item.routes.map((subitem: any, subindex: number) => 
-                    <Menu.Item key={subitem.key} onClick={() => this.subJumpToRouter(subitem.path)}>{subitem.name}</Menu.Item>
+                    <Menu.Item key={subitem.key}><Link to={subitem.path}>{subitem.name}</Link></Menu.Item>
                   )
                 }
               </SubMenu>:
-              <Menu.Item 
-                key={item.key} 
-                onClick={() => this.subJumpToRouter(item.path)}><Icon type={item.icon} /><span>{item.name}</span></Menu.Item>
+              <Menu.Item key={item.key}>
+                <Link to={item.path}>
+                  <Icon type={item.icon} /><span>{item.name}</span> 
+                </Link>
+              </Menu.Item>
             )
           }
         </Menu>
