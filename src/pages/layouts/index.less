@@ -12,14 +12,15 @@
   }
   .main{
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    height: 100%;
     .header{
       height: @header-height;
       background: #fff;
-      box-shadow: 0 1px 20px -10px rgba(0, 0, 0, .5);
+      box-shadow: 0 2px 20px -10px rgba(0, 0, 0, .5);
       display: flex;
       flex-direction: row;
+      border-bottom: 1px solid #ddd; 
       .headerLeft{
         flex: 1;
       }
@@ -60,11 +61,16 @@
         }
       }
     }
-    .routeMain{
-      background: #fff;
-      margin: 25px 20px;
-      min-height: 200px;
-      padding: 20px 15px;
+    .routeMainWrap{
+      height: calc(100% - @header-height);
+      overflow: auto;
+      .routeMain{
+        background: #fff;
+        margin: 25px 20px;
+        min-height: 200px;
+        padding: 20px 15px;
+      }
     }
+    
   }
 }

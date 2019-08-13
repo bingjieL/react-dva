@@ -152,18 +152,20 @@ class Layout extends React.Component<any, IState> {
                   userData = {this.props.userData}>
                 </MyHeader>
               </header>
-              <main className={style.routeMain}>
-                <Switch>
-                  {this.routes.map((item) =>
-                    <Route exact path={item.path} key={item.path} component={item.component}/>
-                  )}
-                  {
-                    !this.props.userData.isLogin && <Redirect to='/login' />
-                  }
-                  <Route  path="/403" component={ Nopermission } />
-                  <Route  path="/404" component={ NoPage } />
-                  <Route  path="*" component={ NoPage } />
-                </Switch>
+              <main className={style.routeMainWrap} >
+                <div className={style.routeMain}>
+                  <Switch>
+                    {this.routes.map((item) =>
+                      <Route exact path={item.path} key={item.path} component={item.component}/>
+                    )}
+                    {
+                      !this.props.userData.isLogin && <Redirect to='/login' />
+                    }
+                    <Route  path="/403" component={ Nopermission } />
+                    <Route  path="/404" component={ NoPage } />
+                    <Route  path="*" component={ NoPage } />
+                  </Switch>
+                  </div>
               </main>
           </div>
         </div>
