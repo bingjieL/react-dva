@@ -61,9 +61,6 @@ const MyHeader: React.FC<any> = props=> {
 interface IState {
   title: string,
   IRouter: IRouterType<RouteType>[],
-  defaultSelectedKeys: string,
-  defaultPathName: string,
-  routes: RouteType[],
   defaultOpenKeys: string[],
   width: string,
   smalWidth: string,
@@ -76,13 +73,11 @@ interface userMenuDataType {
 }
 
 class Layout extends React.Component<any, IState> {
+  public routes: RouteType[] = []
   public readonly state: Readonly<IState> = {
     title: '我是主页面',
     IRouter,
-    defaultSelectedKeys: '',
-    defaultPathName: '',
     defaultOpenKeys: [],
-    routes:[],
     width: '220px',
     smalWidth: '80px',
     userMenuData: [{
@@ -93,53 +88,47 @@ class Layout extends React.Component<any, IState> {
       key: 'changePw'
     }]
   }
+  public componentWillMount() {
+    this.getRenderRoute()  
+    const speRoute = this.getSpeRoute()
+    const defaultOpenKeys =  [speRoute.parentKey?speRoute.parentKey:'']
+    this.handleOpenChange(defaultOpenKeys, true)
+  }
 
   public handleGo = (pathName: string):void => {
     this.props.history.push(pathName)
   }
-  public jumpToRouter = (pathName: string): void => {
-    this.props.history.push(pathName)
-    const speRoute = this.state.routes.filter(route =>route.path === pathName)[0]
-    speRoute && this.setState({
-      defaultPathName: pathName,
-      defaultSelectedKeys: speRoute.key,
-      defaultOpenKeys: [speRoute.parentKey?speRoute.parentKey:'']
-    })
-  }
-  public handleOpenChange = (openKeys: string[]) => {
-    this.setState({
-      defaultOpenKeys: openKeys
-    })
-  }
   public getRenderRoute = ()=> {
-    return new Promise((resolve) => {
-      const routes = this.state.IRouter.reduce((pre: RouteType[], next:IRouterType<RouteType> )=>{
-        if (next.routes && next.routes.length > 0) {
-          next.routes.forEach((item:RouteType)=>{
-            pre.push(Object.assign({parentKey: next.key,key:item.key}, item))
-          })
-        }else {
-          const { path, component, name, key} = next
-          pre.push({path, component, name, parentKey: key,key: key})
-        }
-        return pre
-      },[]);
-      this.setState({
-        routes: routes.flat()
-      },()=>{
-        resolve()
-      })
-    })
+    const routes = this.state.IRouter.reduce((pre: RouteType[], next:IRouterType<RouteType> )=>{
+      if (next.routes && next.routes.length > 0) {
+        next.routes.forEach((item:RouteType)=>{
+          pre.push(Object.assign({parentKey: next.key,key:item.key}, item))
+        })
+      }else {
+        const { path, component, name, key} = next
+        pre.push({path, component, name, parentKey: key,key: key})
+      }
+      return pre
+    },[]);
+    this.routes = routes.flat()
   }
   
-  public async componentDidMount() {
-    await this.getRenderRoute()
-    const pathName: string = this.props.history.location.pathname
-    this.jumpToRouter(pathName)
+  public getSpeRoute = () => {
+    const pathName = this.props.location.pathname
+    const speRoute = this.routes.filter(route =>route.path === pathName)[0]
+    return speRoute
+  }
+  public handleOpenChange =  (openKeys: string[], load: boolean) => {
+    const lastOpenKey = openKeys.find(key => this.state.defaultOpenKeys.indexOf(key) === -1)
+    this.setState({
+      defaultOpenKeys:  load ? openKeys : (lastOpenKey? [lastOpenKey] : [])  
+    })
   }
 
 
   render(): React.ReactNode {    
+    const speRoute = this.getSpeRoute()
+    const defaultSelectedKeys = speRoute && speRoute.key 
     return (
       <DocumentTitle title={this.state.title}>
         <div className={style.indexWrap}>
@@ -149,10 +138,9 @@ class Layout extends React.Component<any, IState> {
               smalWidth = {this.state.smalWidth}
               width = {this.state.width}
               dataSource = {this.state.IRouter}
-              jumpToRouter = {this.jumpToRouter}
               handleOpenChange = {this.handleOpenChange}
               defaultOpenKeys = {this.state.defaultOpenKeys}
-              defaultSelectedKeys = {this.state.defaultSelectedKeys}
+              defaultSelectedKeys = {defaultSelectedKeys}
             />
           </aside>
           {/* 主要内容 */}
@@ -167,7 +155,7 @@ class Layout extends React.Component<any, IState> {
               <main className={style.routeMainWrap}>
                 <div className={style.routeMain}>
                   <Switch>
-                    {this.state.routes.map((item) =>
+                    {this.routes.map((item) =>
                       <Route exact path={item.path} key={item.path} component={item.component}/>
                     )}
                     {
