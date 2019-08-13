@@ -10,7 +10,7 @@ import { connectSate } from '../models/connect';
 
 class RouterConfig extends  React.Component<any, any>{
   public componentDidMount () {
-    console.log('--->this.props.userData', this.props.userData)
+    // console.log('--->this.props.userData', this.props.userData)
   }
   public componentWillMount() {
     const { dispatch } = this.props

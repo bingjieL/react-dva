@@ -99,7 +99,6 @@ class Layout extends React.Component<any, IState> {
   }
   public jumpToRouter = (pathName: string): void => {
     this.props.history.push(pathName)
-    console.log('---> pathName', pathName)
     const speRoute = this.state.routes.filter(route =>route.path === pathName)[0]
     speRoute && this.setState({
       defaultPathName: pathName,
@@ -158,25 +157,27 @@ class Layout extends React.Component<any, IState> {
           </aside>
           {/* 主要内容 */}
           <div className={style.main}>
-              <header className={style.header}>
+              <div className={style.header}>
                 <MyHeader 
                   userMenuData={this.state.userMenuData} 
                   go={this.handleGo} 
                   userData = {this.props.userData}>
                 </MyHeader>
-              </header>
-              <main className={style.routeMain}>
-                <Switch>
-                  {this.state.routes.map((item) =>
-                    <Route exact path={item.path} key={item.path} component={item.component}/>
-                  )}
-                  {
-                    !this.props.userData.isLogin && <Redirect to='/login' />
-                  }
-                  <Route  path="/403" component={ Nopermission } />
-                  <Route  path="/404" component={ NoPage } />
-                  <Route  path="*" component={ NoPage } />
-                </Switch>
+              </div>
+              <main className={style.routeMainWrap}>
+                <div className={style.routeMain}>
+                  <Switch>
+                    {this.state.routes.map((item) =>
+                      <Route exact path={item.path} key={item.path} component={item.component}/>
+                    )}
+                    {
+                      !this.props.userData.isLogin && <Redirect to='/login' />
+                    }
+                    <Route  path="/403" component={ Nopermission } />
+                    <Route  path="/404" component={ NoPage } />
+                    <Route  path="*" component={ NoPage } />
+                  </Switch>
+                </div>
               </main>
           </div>
         </div>

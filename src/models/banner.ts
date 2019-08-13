@@ -3,7 +3,8 @@ import { GetApi } from 'server/banner'
 
 export interface bannerModelStateType {
   listData: Array<any>,
-  loading: boolean
+  loading: boolean,
+  params: any
 }
 
 export interface bannerModelType<T> {
@@ -20,24 +21,39 @@ export interface bannerModelType<T> {
 
 
 const bannerModel: bannerModelType<bannerModelStateType> = {
-  namespace: 'bananerModel',
+  namespace: 'bannerModel',
   state: {
     listData: [],
     loading: false,
+    params: {}
   },
   effects: {
     *getBannerList({ payload }, {put, call}) {
-      yield call(GetApi, payload)
+      yield put({
+        type: 'changeloading'
+      })
+      const bannerRes = yield call(GetApi, payload)
+      yield put({
+        type: 'setlistData',
+        payload: bannerRes.data.data.rows.map((item: any ,index: number)=>{item.key = index; return item}  )
+      })
+      yield put({
+        type: 'changeloading'
+      })
     }
   },
   reducers: {
     setlistData(state, {payload}) {
-      return state;
+      return {
+        ...state,
+        listData: payload
+      };
     },
     changeloading(state, { payload }) {
-      console.log('---> state', )
+      const loading = !state.loading
       return {
-        ...state
+        ...state,
+        loading
       }
     }
   }
