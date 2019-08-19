@@ -79,15 +79,14 @@ class Login extends React.Component<any, Istate> {
   public handleLogin = (fieldsValue: any):void => {
     const { dispatch } = this.props
     dispatch({
-      type: 'user/apiLogin',
+      type: 'userModel/apiLogin',
       payload: fieldsValue
     })
   }
   public handChangeUserMsg = (value: any): void => {
-    console.log('---> value', value)
     const { dispatch } = this.props
     dispatch({
-      type: 'user/changeUserMsg',
+      type: 'userModel/changeUserMsg',
       payload: value
     })
   }
@@ -113,8 +112,7 @@ class Login extends React.Component<any, Istate> {
   }
 }
 
-
-export default connect(({user}: connectSate)=>({
-  userData: user.userData,
-  userMsg: user.userMsg
+export default connect(({userModel}: connectSate)=>({
+  userData: userModel.userData,
+  userMsg: userModel.userMsg
 }))(Login) 

@@ -1,25 +1,26 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'dva';
-import { Button, Table, Popconfirm } from 'antd';
 import { connectSate } from '../../models/connect';
+import { Table, Popconfirm, Button } from 'antd'
+
+// style 
 import style from './list.less'
 
 // table component
 const ListTable: React.FC<any> = (props) => {
-  const { tableColumns, listData, loading} = props
+  const { tableColumns, listData, listLoading} = props
   return(<>
-      <Table loading={loading} columns={tableColumns} dataSource={listData} />
+      <Table loading={listLoading} columns={tableColumns} dataSource={listData} />
     </>)
 }
 
 
-// state Type
-interface Istate {
-  tableColumns : Array<any>
+export interface bookStateType {
+  tableColumns: any[]
 }
 
-class BannerList extends React.Component<any, Istate>{
-  public readonly state: Readonly<Istate> = {
+class BookList extends React.Component<any, bookStateType> {
+  public readonly state: Readonly<bookStateType> = {
     tableColumns:[{
       title: '日期',
       dataIndex: 'updated_time',
@@ -29,26 +30,30 @@ class BannerList extends React.Component<any, Istate>{
       }
     }, {
       title: 'id',
-      dataIndex: 'bannerId',
-      key: 'bannerId'
+      dataIndex: 'bookId',
+      key: 'bookId'
+    }, {
+      title: '书籍作者',
+      dataIndex: 'bookAuthor',
+      key: 'bookAuthor'
     }, {
       title: '标题',
-      dataIndex: 'bannerTitle',
-      key: 'bannerTitle'
+      dataIndex: 'bookTitle',
+      key: 'bookTitle'
     }, {
       title: '图片预览',
-      dataIndex: 'bannerImg',
-      key: 'bannerImg',
-      render: (text: string) => (<img src={text} alt='banner' style={{width: "100px"}}></img>)
+      dataIndex: 'bookPic',
+      key: 'bookPic',
+      render: (text: string) => (<img src={text} alt='book' style={{width: "100px"}}></img>)
     },{
       title: '操作',
       dataIndex: 'action',
       render: (_: any, record:any) => {
         return (<>
-          <Popconfirm title="确认删除本条数据吗？" onConfirm = {()=> this.handleDelete(record.bannerId)} okText="Yes" cancelText="No">
+          <Popconfirm title="确认删除本条数据吗？" onConfirm = {()=> this.handleDelete(record.bookId)} okText="Yes" cancelText="No">
             <span style={{color: '#f5222d', cursor: 'pointer'}}>Delete</span>
           </Popconfirm>
-          <Button icon="edit" type="link" onClick= {()=> this.goEdit(record.bannerId)}></Button>
+          <Button icon="edit" type="link" onClick= {()=> this.goEdit(record.bookId)}></Button>
         </>)
       }
     }]
@@ -56,22 +61,21 @@ class BannerList extends React.Component<any, Istate>{
   public componentDidMount() {
     const {dispatch} = this.props
     dispatch({
-      type: 'bannerModel/getBannerList',
-      payload: this.props.bannerModel.params
+      type: 'bookModel/getBookList'
     })
   }
-  public goEdit  = (bannerId?: string): void =>{
-    const pathname = bannerId ? `/main/bannerEdit/${bannerId}` : '/main/bannerAdd'
+  public goEdit  = (bookId?: string): void =>{
+    const pathname = bookId ? `/main/bookEdit/${bookId}` : '/main/bookAdd'
     this.props.history.push({
       pathname,
     })
   }
-  public handleDelete = (bannerId: string) => {
+  public handleDelete = (bookId: string) => {
     const { dispatch } = this.props
     dispatch({
-      type: 'bannerModel/deleteBanner',
+      type: 'bookModel/deleteBook',
       payload: {
-        bannerId
+        bookId
       }
     })
   }
@@ -87,15 +91,15 @@ class BannerList extends React.Component<any, Istate>{
       {/* 表格列表 */}
       <div className="main">
         <ListTable 
-        listData = {this.props.bannerModel.listData}
-        loading = {this.props.bannerModel.loading}
+        listData = {this.props.bookModel.listData}
+        listLoading = {this.props.bookModel.listLoading}
         tableColumns={this.state.tableColumns}></ListTable>
       </div>
     </div>)
   }
 }
 
-export default connect(({globalData, bannerModel}: connectSate) => ({
-  globalData,
-  bannerModel
-}))(BannerList)
+
+export default connect(({bookModel}: connectSate) => ({
+  bookModel
+}))(BookList)

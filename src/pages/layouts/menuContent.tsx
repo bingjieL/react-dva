@@ -66,7 +66,7 @@ class MenuContent extends React.Component<any,Istate> {
               <SubMenu key={item.key} title={<span><Icon type={item.icon} /><span>{item.name}</span></span>}>
                 {
                   item.routes.map((subitem: any, subindex: number) => 
-                    <Menu.Item key={subitem.key}><Link to={subitem.path}>{subitem.name}</Link></Menu.Item>
+                    !subitem.hidden && <Menu.Item key={subitem.key}><Link to={subitem.path}>{subitem.name}</Link></Menu.Item>
                   )
                 }
               </SubMenu>:

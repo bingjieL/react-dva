@@ -1,12 +1,23 @@
+
+import { EffectsCommandMap } from 'dva'
 import { GlobalStateType } from './globalData'
 import { UserStateType } from './user'
 import { bannerModelStateType } from './banner'
-import { EffectsCommandMap } from 'dva'
+import { blogModelStateType } from './blog';
+import { bookStateType } from './book';
+import { hotSwiperStateType } from './hotSwiper';
+import { musicSheetStateType } from './musicSheet';
+import { blogTypeModelStateType } from './blogType';
 
 export interface connectSate {
   globalData: GlobalStateType,
-  user: UserStateType,
-  bannerModel: bannerModelStateType
+  userModel: UserStateType,
+  bannerModel: bannerModelStateType,
+  blogModel: blogModelStateType,
+  bookModel: bookStateType,
+  hotSwiperModel: hotSwiperStateType,
+  musicSheetModel: musicSheetStateType,
+  blogTypeModel: blogTypeModelStateType
 }
 
 
@@ -21,6 +32,6 @@ export type Dispatch = <P = any, C = (payload: P) => void>(action: {
   type: string;
   payload?: P;
   callback?: C;
-  [key: string]: any;
+  [key: string]: any; 
 }) => any;
 

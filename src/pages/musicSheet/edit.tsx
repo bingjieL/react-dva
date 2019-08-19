@@ -1,20 +1,23 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'dva';
-import { Form, Input, Button, Upload, message, Icon, Row, Col } from 'antd'
 import { connectSate } from '../../models/connect';
+import { Form, Input, Button, Upload, message, Icon, Row, Col } from 'antd'
 import { uploadImgUrl } from 'server/urlconfig'
 
+// style 
 import style from './edit.less';
+
+const { TextArea } = Input
 
 // header
 const Header: React.FC<any> = (props) => {
   return(<header className={style.headerWrap}>
-    <h3 className={style.left}>{props.bid? 'banner Edit' : 'banner Add'} </h3>
+    <h3 className={style.left}>{props.bid? 'musicSheet Edit' : 'musicSheet Add'} </h3>
   </header>)
 }
-// banner edit Form
+// musicSheet edit Form
 const EditForm: React.FC<any> = (props) => {
-  const { handleUplodChange, bannerImg, uploadLoading, handleSubmit, addLoading, bid, goBack } = props
+  const { handleUplodChange, sheetImg, uploadLoading, handleSubmit, addLoading, bid, goBack } = props
   const { getFieldDecorator } = props.form;
   const formItemLayout = {
     labelCol: {
@@ -33,35 +36,49 @@ const EditForm: React.FC<any> = (props) => {
   }
   const valiDateForm: ()=> void = ()=> {
     props.form.validateFields((err: any, fieldValue: any) => {
-      console.log(err,fieldValue)
       !err && handleSubmit(fieldValue)
     })
   }
-
   const uploadButton = (
     <div>
       <Icon type={uploadLoading ? 'loading' : 'plus'} />
       <div className="ant-upload-text">Upload</div>
     </div>
   );
-  return(<Form {...formItemLayout} className={style.bannerMainWrap}>
-    <Form.Item label="Banner Title">
-      {getFieldDecorator('bannerTitle', {
+  return(<Form {...formItemLayout} className={style.musicSheetMainWrap}>
+    <Form.Item label="歌单标题">
+      {getFieldDecorator('sheetTitle', {
         rules: [{
           required: true,
-          message: '请填写banner title',
+          message: '请填写歌单标题',
         },],
       })(<Input />)} 
     </Form.Item>
-    <Form.Item label="Banner Img">
-      {getFieldDecorator('bannerImg', {
+    <Form.Item label="歌单标签">
+      {getFieldDecorator('sheetTag', {
+        rules: [{
+          required: true,
+          message: '请填写歌单标签',
+        },],
+      })(<Input />)} 
+    </Form.Item>
+    <Form.Item label="歌单链接">
+      {getFieldDecorator('sheetUrl', {
+        rules: [{
+          required: true,
+          message: '请填写歌单链接',
+        },],
+      })(<Input />)} 
+    </Form.Item>
+    <Form.Item label="MusicSheet Img">
+      {getFieldDecorator('sheetImg', {
         getValueFromEvent:(file: any) => {
           const res = file.fileList[0].response
           if(res && res.code === 200) return res.data.url
         },
         rules: [{
           required: true,
-          message: '请上传banner 图片',
+          message: '请上传musicSheet 图片',
         },],
       })(
         <Upload
@@ -73,9 +90,17 @@ const EditForm: React.FC<any> = (props) => {
         beforeUpload={handlebeforeUpload}
         onChange={handleUplodChange}
       >
-        {bannerImg ? <img src={bannerImg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {sheetImg ? <img src={sheetImg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
       )} 
+    </Form.Item>
+    <Form.Item label="歌单描述" wrapperCol= {{xs: {span: 12}, sm: {span: 12}}}>
+      {getFieldDecorator('sheetDes', {
+        rules: [{
+          required: true,
+          message: '请填写歌单描述',
+        },],
+      })(<TextArea rows={3} />)} 
     </Form.Item>
     <Row>
       <Col offset={3}>
@@ -87,74 +112,85 @@ const EditForm: React.FC<any> = (props) => {
         </Button>
       </Col>
     </Row>
-    {/* </Form.Item> */}
   </Form>)
 }
 const CEditForm = Form.create({
-  name: 'bannerFrom',
+  name: 'musicSheetFrom',
   mapPropsToFields(props: any) {
     return{
-      bannerTitle: Form.createFormField({
-        value: props.bannerTitle
+      sheetTitle: Form.createFormField({
+        value: props.sheetTitle
       }),
-      bannerImg: Form.createFormField({
-        value: props.bannerImg
-      })
+      sheetImg: Form.createFormField({
+        value: props.sheetImg
+      }),
+      sheetTag: Form.createFormField({
+        value: props.sheetTag
+      }),
+      sheetUrl: Form.createFormField({
+        value: props.sheetUrl
+      }),
+      sheetDes: Form.createFormField({
+        value: props.sheetDes
+      }),
+      musicSheetAuthor: Form.createFormField({
+        value: props.musicSheetAuthor
+      }),
     }
   },
   onValuesChange(props: any, value) {
-    props.handChangeBannerForm(value) 
+    props.handChangeMusicSheetForm(value) 
   }
 })(EditForm)
 
 
-interface bannerAddParamsType {
-  bannerImg: string,
-  bannerTitle: string
+interface musicSheetAddParamsType {
+  sheetImg: string,
+  sheetTitle: string
 }
-interface bannerStateType {
+interface musicSheetStateType {
   uploadLoading: boolean,
   bid: string
 }
-class BannerEdit extends React.Component<any, bannerStateType>{
-  public readonly state: Readonly<bannerStateType> = {
+class MusicSheetEdit extends React.Component<any, musicSheetStateType>{
+  public readonly state: Readonly<musicSheetStateType> = {
     uploadLoading: false,
     bid: ''
   }
   public componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
-      type: 'bannerModel/clearEditParams'
+      type: 'musicSheetModel/clearEditParams'
     })
     const bid = this.props.match.params._bid
-    bid && this.getBannerById(bid)
+    bid && this.getMusicSheetById(bid)
     this.setState({
       bid
     })
   }
   public goBack: ()=> void = () => {
-   this.props.history.push('/main/bannerlist')
+   this.props.history.push('/main/musicSheetlist')
   }
-  public getBannerById(bannerId: string) {
+  public getMusicSheetById(sheetId: string) {
     this.props.dispatch({
-      type: 'bannerModel/getBannerById',
-      payload: {bannerId}
+      type: 'musicSheetModel/getMusicSheetById',
+      payload: {sheetId}
     })
   }
-  public handChangeBannerForm: (value: any) => void = (value) => {
+  public handChangeMusicSheetForm: (value: any) => void = (value) => {
     // console.log('>> change value', value)
     const {dispatch} = this.props
     dispatch({
-      type: 'bannerModel/changeEditParams',
+      type: 'musicSheetModel/changeEditParams',
       payload: value
     })
   }
-  public handleSubmit: (params: bannerAddParamsType) => void = (params) => {
+  public handleSubmit: (params: musicSheetAddParamsType) => void = (params) => {
     const {dispatch} = this.props
     const {bid} = this.state
     dispatch({
-      type: bid? 'bannerModel/editBanner' :'bannerModel/addBanner',
-      payload: Object.assign({bannerId: bid}, params) ,
+      type: bid? 'musicSheetModel/updateMusicSheet' :'musicSheetModel/addMusicSheet',
+      payload: Object.assign({sheetId: bid}, params) ,
       cb: ()=>{
         this.goBack()
       }
@@ -167,10 +203,10 @@ class BannerEdit extends React.Component<any, bannerStateType>{
       })
     }else if(info.file.status === 'done') {
       const res = info.file.response
-      let bannerImg = ''
+      let sheetImg = ''
       if(res.code === 200 ){
         message.success('～～ 图片上传成功！！')
-        bannerImg = res.data.url
+        sheetImg = res.data.url
       }else {
         message.error('~~ 服务器异常, 请稍后再试！！')
       }
@@ -178,9 +214,9 @@ class BannerEdit extends React.Component<any, bannerStateType>{
         uploadLoading: false
       })
       this.props.dispatch({
-        type: 'bannerModel/changeEditParams',
+        type: 'musicSheetModel/changeEditParams',
         payload: {
-          bannerImg          
+          sheetImg          
         }
       })
     }
@@ -189,13 +225,12 @@ class BannerEdit extends React.Component<any, bannerStateType>{
     return (<div className={style.editWrap}>
       <Header bid = {this.state.bid}></Header>
       <CEditForm
+        {...this.props.musicSheetModel.editParams}
         bid = {this.state.bid}
         goBack = {this.goBack}
-        addLoading = {this.props.bannerModel.addLoading}
+        addLoading = {this.props.musicSheetModel.addLoading}
         uploadLoading = {this.state.uploadLoading}
-        bannerImg = { this.props.bannerModel.editParams.bannerImg }
-        bannerTitle = { this.props.bannerModel.editParams.bannerTitle}
-        handChangeBannerForm = {this.handChangeBannerForm}
+        handChangeMusicSheetForm = {this.handChangeMusicSheetForm}
         handleUplodChange={ this.handleUplodChange }
         handleSubmit = { this.handleSubmit }
       ></CEditForm>
@@ -203,7 +238,6 @@ class BannerEdit extends React.Component<any, bannerStateType>{
   }
 }
 
-export default connect(({globalData, bannerModel, }: connectSate) => ({
-  globalData,
-  bannerModel
-}))(BannerEdit)
+export default connect(({musicSheetModel}: connectSate) => ({
+  musicSheetModel
+}))(MusicSheetEdit)

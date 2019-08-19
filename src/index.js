@@ -2,8 +2,9 @@ import "babel-polyfill";
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 import dva from 'dva'
-import '@/assets/less/variable.less';
-import '@/assets/less/mixin.less';
+// import '@/assets/less/variable.less';
+// import '@/assets/less/mixin.less';
+import '@/assets/less/default.css'
 
 import registerModels from './models';
 import router from 'routes/root.routes';

@@ -1,20 +1,21 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'dva';
-import { Form, Input, Button, Upload, message, Icon, Row, Col } from 'antd'
 import { connectSate } from '../../models/connect';
+import { Form, Input, Button, Upload, message, Icon, Row, Col } from 'antd'
 import { uploadImgUrl } from 'server/urlconfig'
 
+// style 
 import style from './edit.less';
 
 // header
 const Header: React.FC<any> = (props) => {
   return(<header className={style.headerWrap}>
-    <h3 className={style.left}>{props.bid? 'banner Edit' : 'banner Add'} </h3>
+    <h3 className={style.left}>{props.bid? 'hotSwiper Edit' : 'hotSwiper Add'} </h3>
   </header>)
 }
-// banner edit Form
+// hotSwiper edit Form
 const EditForm: React.FC<any> = (props) => {
-  const { handleUplodChange, bannerImg, uploadLoading, handleSubmit, addLoading, bid, goBack } = props
+  const { handleUplodChange, hotImg, uploadLoading, handleSubmit, addLoading, bid, goBack } = props
   const { getFieldDecorator } = props.form;
   const formItemLayout = {
     labelCol: {
@@ -33,35 +34,41 @@ const EditForm: React.FC<any> = (props) => {
   }
   const valiDateForm: ()=> void = ()=> {
     props.form.validateFields((err: any, fieldValue: any) => {
-      console.log(err,fieldValue)
       !err && handleSubmit(fieldValue)
     })
   }
-
   const uploadButton = (
     <div>
       <Icon type={uploadLoading ? 'loading' : 'plus'} />
       <div className="ant-upload-text">Upload</div>
     </div>
   );
-  return(<Form {...formItemLayout} className={style.bannerMainWrap}>
-    <Form.Item label="Banner Title">
-      {getFieldDecorator('bannerTitle', {
+  return(<Form {...formItemLayout} className={style.hotSwiperMainWrap}>
+    <Form.Item label="HotSwiper Title">
+      {getFieldDecorator('hotTitle', {
         rules: [{
           required: true,
-          message: '请填写banner title',
+          message: '请填写hotSwiper title',
         },],
       })(<Input />)} 
     </Form.Item>
-    <Form.Item label="Banner Img">
-      {getFieldDecorator('bannerImg', {
+    <Form.Item label="github 链接">
+      {getFieldDecorator('hotUrl', {
+        rules: [{
+          required: true,
+          message: '请填写关联的github链接',
+        },],
+      })(<Input />)} 
+    </Form.Item>
+    <Form.Item label="HotSwiper Img">
+      {getFieldDecorator('hotImg', {
         getValueFromEvent:(file: any) => {
           const res = file.fileList[0].response
           if(res && res.code === 200) return res.data.url
         },
         rules: [{
           required: true,
-          message: '请上传banner 图片',
+          message: '请上传hotSwiper 图片',
         },],
       })(
         <Upload
@@ -73,7 +80,7 @@ const EditForm: React.FC<any> = (props) => {
         beforeUpload={handlebeforeUpload}
         onChange={handleUplodChange}
       >
-        {bannerImg ? <img src={bannerImg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {hotImg ? <img src={hotImg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
       )} 
     </Form.Item>
@@ -87,74 +94,85 @@ const EditForm: React.FC<any> = (props) => {
         </Button>
       </Col>
     </Row>
-    {/* </Form.Item> */}
   </Form>)
 }
 const CEditForm = Form.create({
-  name: 'bannerFrom',
+  name: 'hotSwiperFrom',
   mapPropsToFields(props: any) {
     return{
-      bannerTitle: Form.createFormField({
-        value: props.bannerTitle
+      hotTitle: Form.createFormField({
+        value: props.hotTitle
       }),
-      bannerImg: Form.createFormField({
-        value: props.bannerImg
-      })
+      hotImg: Form.createFormField({
+        value: props.hotImg
+      }),
+      hotUrl: Form.createFormField({
+        value: props.hotUrl
+      }),
+      hotSwiperdlUrl: Form.createFormField({
+        value: props.hotSwiperdlUrl
+      }),
+      hotSwiperDes: Form.createFormField({
+        value: props.hotSwiperDes
+      }),
+      hotSwiperAuthor: Form.createFormField({
+        value: props.hotSwiperAuthor
+      }),
     }
   },
   onValuesChange(props: any, value) {
-    props.handChangeBannerForm(value) 
+    props.handChangeHotSwiperForm(value) 
   }
 })(EditForm)
 
 
-interface bannerAddParamsType {
-  bannerImg: string,
-  bannerTitle: string
+interface hotSwiperAddParamsType {
+  hotImg: string,
+  hotTitle: string
 }
-interface bannerStateType {
+interface hotSwiperStateType {
   uploadLoading: boolean,
   bid: string
 }
-class BannerEdit extends React.Component<any, bannerStateType>{
-  public readonly state: Readonly<bannerStateType> = {
+class HotSwiperEdit extends React.Component<any, hotSwiperStateType>{
+  public readonly state: Readonly<hotSwiperStateType> = {
     uploadLoading: false,
     bid: ''
   }
   public componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
-      type: 'bannerModel/clearEditParams'
+      type: 'hotSwiperModel/clearEditParams'
     })
     const bid = this.props.match.params._bid
-    bid && this.getBannerById(bid)
+    bid && this.getHotSwiperById(bid)
     this.setState({
       bid
     })
   }
   public goBack: ()=> void = () => {
-   this.props.history.push('/main/bannerlist')
+   this.props.history.push('/main/hotSwiperlist')
   }
-  public getBannerById(bannerId: string) {
+  public getHotSwiperById(hotId: string) {
     this.props.dispatch({
-      type: 'bannerModel/getBannerById',
-      payload: {bannerId}
+      type: 'hotSwiperModel/getHotSwiperById',
+      payload: {hotId}
     })
   }
-  public handChangeBannerForm: (value: any) => void = (value) => {
+  public handChangeHotSwiperForm: (value: any) => void = (value) => {
     // console.log('>> change value', value)
     const {dispatch} = this.props
     dispatch({
-      type: 'bannerModel/changeEditParams',
+      type: 'hotSwiperModel/changeEditParams',
       payload: value
     })
   }
-  public handleSubmit: (params: bannerAddParamsType) => void = (params) => {
+  public handleSubmit: (params: hotSwiperAddParamsType) => void = (params) => {
     const {dispatch} = this.props
     const {bid} = this.state
     dispatch({
-      type: bid? 'bannerModel/editBanner' :'bannerModel/addBanner',
-      payload: Object.assign({bannerId: bid}, params) ,
+      type: bid? 'hotSwiperModel/updateHotSwiper' :'hotSwiperModel/addHotSwiper',
+      payload: Object.assign({hotId: bid}, params) ,
       cb: ()=>{
         this.goBack()
       }
@@ -167,10 +185,10 @@ class BannerEdit extends React.Component<any, bannerStateType>{
       })
     }else if(info.file.status === 'done') {
       const res = info.file.response
-      let bannerImg = ''
+      let hotImg = ''
       if(res.code === 200 ){
         message.success('～～ 图片上传成功！！')
-        bannerImg = res.data.url
+        hotImg = res.data.url
       }else {
         message.error('~~ 服务器异常, 请稍后再试！！')
       }
@@ -178,9 +196,9 @@ class BannerEdit extends React.Component<any, bannerStateType>{
         uploadLoading: false
       })
       this.props.dispatch({
-        type: 'bannerModel/changeEditParams',
+        type: 'hotSwiperModel/changeEditParams',
         payload: {
-          bannerImg          
+          hotImg          
         }
       })
     }
@@ -189,13 +207,12 @@ class BannerEdit extends React.Component<any, bannerStateType>{
     return (<div className={style.editWrap}>
       <Header bid = {this.state.bid}></Header>
       <CEditForm
+        {...this.props.hotSwiperModel.editParams}
         bid = {this.state.bid}
         goBack = {this.goBack}
-        addLoading = {this.props.bannerModel.addLoading}
+        addLoading = {this.props.hotSwiperModel.addLoading}
         uploadLoading = {this.state.uploadLoading}
-        bannerImg = { this.props.bannerModel.editParams.bannerImg }
-        bannerTitle = { this.props.bannerModel.editParams.bannerTitle}
-        handChangeBannerForm = {this.handChangeBannerForm}
+        handChangeHotSwiperForm = {this.handChangeHotSwiperForm}
         handleUplodChange={ this.handleUplodChange }
         handleSubmit = { this.handleSubmit }
       ></CEditForm>
@@ -203,7 +220,6 @@ class BannerEdit extends React.Component<any, bannerStateType>{
   }
 }
 
-export default connect(({globalData, bannerModel, }: connectSate) => ({
-  globalData,
-  bannerModel
-}))(BannerEdit)
+export default connect(({hotSwiperModel}: connectSate) => ({
+  hotSwiperModel
+}))(HotSwiperEdit)

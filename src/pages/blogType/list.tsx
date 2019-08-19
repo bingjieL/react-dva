@@ -18,7 +18,7 @@ interface Istate {
   tableColumns : Array<any>
 }
 
-class BannerList extends React.Component<any, Istate>{
+class BlogTypeList extends React.Component<any, Istate>{
   public readonly state: Readonly<Istate> = {
     tableColumns:[{
       title: '日期',
@@ -29,26 +29,21 @@ class BannerList extends React.Component<any, Istate>{
       }
     }, {
       title: 'id',
-      dataIndex: 'bannerId',
-      key: 'bannerId'
+      dataIndex: 'blogTypeId',
+      key: 'blogTypeId'
     }, {
       title: '标题',
-      dataIndex: 'bannerTitle',
-      key: 'bannerTitle'
+      dataIndex: 'blogTypeTitle',
+      key: 'blogTypeTitle'
     }, {
-      title: '图片预览',
-      dataIndex: 'bannerImg',
-      key: 'bannerImg',
-      render: (text: string) => (<img src={text} alt='banner' style={{width: "100px"}}></img>)
-    },{
       title: '操作',
       dataIndex: 'action',
       render: (_: any, record:any) => {
         return (<>
-          <Popconfirm title="确认删除本条数据吗？" onConfirm = {()=> this.handleDelete(record.bannerId)} okText="Yes" cancelText="No">
+          <Popconfirm title="确认删除本条数据吗？" onConfirm = {()=> this.handleDelete(record.blogTypeId)} okText="Yes" cancelText="No">
             <span style={{color: '#f5222d', cursor: 'pointer'}}>Delete</span>
           </Popconfirm>
-          <Button icon="edit" type="link" onClick= {()=> this.goEdit(record.bannerId)}></Button>
+          <Button icon="edit" type="link" onClick= {()=> this.goEdit(record.blogTypeId)}></Button>
         </>)
       }
     }]
@@ -56,22 +51,22 @@ class BannerList extends React.Component<any, Istate>{
   public componentDidMount() {
     const {dispatch} = this.props
     dispatch({
-      type: 'bannerModel/getBannerList',
-      payload: this.props.bannerModel.params
+      type: 'blogTypeModel/getBlogTypeList',
+      payload: this.props.blogTypeModel.params
     })
   }
-  public goEdit  = (bannerId?: string): void =>{
-    const pathname = bannerId ? `/main/bannerEdit/${bannerId}` : '/main/bannerAdd'
+  public goEdit  = (blogTypeId?: string): void =>{
+    const pathname = blogTypeId ? `/main/blogTypeEdit/${blogTypeId}` : '/main/blogTypeAdd'
     this.props.history.push({
       pathname,
     })
   }
-  public handleDelete = (bannerId: string) => {
+  public handleDelete = (blogTypeId: string) => {
     const { dispatch } = this.props
     dispatch({
-      type: 'bannerModel/deleteBanner',
+      type: 'blogTypeModel/deleteBlogType',
       payload: {
-        bannerId
+        blogTypeId
       }
     })
   }
@@ -87,15 +82,15 @@ class BannerList extends React.Component<any, Istate>{
       {/* 表格列表 */}
       <div className="main">
         <ListTable 
-        listData = {this.props.bannerModel.listData}
-        loading = {this.props.bannerModel.loading}
+        listData = {this.props.blogTypeModel.listData}
+        loading = {this.props.blogTypeModel.loading}
         tableColumns={this.state.tableColumns}></ListTable>
       </div>
     </div>)
   }
 }
 
-export default connect(({globalData, bannerModel}: connectSate) => ({
+export default connect(({globalData, blogTypeModel}: connectSate) => ({
   globalData,
-  bannerModel
-}))(BannerList)
+  blogTypeModel
+}))(BlogTypeList)

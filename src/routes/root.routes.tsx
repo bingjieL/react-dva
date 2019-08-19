@@ -19,7 +19,7 @@ const RouterConfig = ({ history }: any): React.ReactNode => {
         </Switch>
       </LocaleProvider>
     </Router>
-  );
+  ); 
 }
  
 export default RouterConfig

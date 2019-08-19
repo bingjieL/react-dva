@@ -3,11 +3,15 @@ import { connect } from 'dva';
 import { Switch ,Route, Redirect} from 'dva/router';
 import { Menu, Dropdown, Modal } from 'antd';
 import { connectSate } from 'models/connect';
-import DocumentTitle from 'react-document-title';
 import style from './index.less';
-import MenuContent from '@/pages/layouts/menuContent.tsx'
 import { IRouter, IRouterType, RouteType } from 'utils/router.config';
+import DocumentTitle  from 'react-document-title'
+
+// img
 import HeaderImg from 'assets/images/header.jpeg';
+
+// component
+import MenuContent from '@/pages/layouts/menuContent.tsx'
 import Nopermission from 'pages/403'
 import NoPage from 'pages/404'
 
@@ -74,6 +78,8 @@ interface userMenuDataType {
 
 class Layout extends React.Component<any, IState> {
   public routes: RouteType[] = []
+  public defaultSelectedKeys: string = ''
+  public pageTitle: string = 'Jay_blog后台管理系统'
   public readonly state: Readonly<IState> = {
     title: '我是主页面',
     IRouter,
@@ -89,12 +95,12 @@ class Layout extends React.Component<any, IState> {
     }]
   }
   public componentWillMount() {
-    this.getRenderRoute()  
+    this.getRenderRoute()
+    this.updateSelectKey()  
     const speRoute = this.getSpeRoute()
-    const defaultOpenKeys =  [speRoute.parentKey?speRoute.parentKey:'']
+    const defaultOpenKeys: any =  [speRoute?speRoute.parentKey:'']
     this.handleOpenChange(defaultOpenKeys, true)
   }
-
   public handleGo = (pathName: string):void => {
     this.props.history.push(pathName)
   }
@@ -114,8 +120,8 @@ class Layout extends React.Component<any, IState> {
   }
   
   public getSpeRoute = () => {
-    const pathName = this.props.location.pathname
-    const speRoute = this.routes.filter(route =>route.path === pathName)[0]
+    const pathName = this.props.location.pathname.split('?')[0]
+    const speRoute = this.routes.find(item => item.path === pathName)
     return speRoute
   }
   public handleOpenChange =  (openKeys: string[], load: boolean) => {
@@ -124,13 +130,17 @@ class Layout extends React.Component<any, IState> {
       defaultOpenKeys:  load ? openKeys : (lastOpenKey? [lastOpenKey] : [])  
     })
   }
-
-
-  render(): React.ReactNode {    
+  
+  public updateSelectKey = () => {
     const speRoute = this.getSpeRoute()
-    const defaultSelectedKeys = speRoute && speRoute.key 
+    if(!speRoute) return
+    this.pageTitle = `Jay_blog-${speRoute.name}`
+    this.defaultSelectedKeys = speRoute.key 
+  }
+  render(): React.ReactNode {
+    this.updateSelectKey() 
     return (
-      <DocumentTitle title={this.state.title}>
+      <DocumentTitle title={this.pageTitle}>
         <div className={style.indexWrap}>
           {/* 侧边栏 导航 */}
           <aside className={style.aside} style={{width: this.props.globalData.collapsed ? this.state.smalWidth : this.state.width}}>
@@ -140,7 +150,7 @@ class Layout extends React.Component<any, IState> {
               dataSource = {this.state.IRouter}
               handleOpenChange = {this.handleOpenChange}
               defaultOpenKeys = {this.state.defaultOpenKeys}
-              defaultSelectedKeys = {defaultSelectedKeys}
+              defaultSelectedKeys = {this.defaultSelectedKeys}
             />
           </aside>
           {/* 主要内容 */}
@@ -156,7 +166,7 @@ class Layout extends React.Component<any, IState> {
                 <div className={style.routeMain}>
                   <Switch>
                     {this.routes.map((item) =>
-                      <Route exact path={item.path} key={item.path} component={item.component}/>
+                      <Route path={item.path} key={item.path} component={item.component}/>
                     )}
                     {
                       !this.props.userData.isLogin && <Redirect to='/login' />
@@ -169,14 +179,14 @@ class Layout extends React.Component<any, IState> {
               </main>
           </div>
         </div>
-        
       </DocumentTitle>
+      
     )
   }
 }
 
 
-  export default connect(({ globalData, user }: connectSate) => ({
+  export default connect(({ globalData, userModel }: connectSate) => ({
     globalData,
-    userData: user.userData
+    userData: userModel.userData
   }))(Layout)

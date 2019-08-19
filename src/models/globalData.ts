@@ -1,5 +1,6 @@
 
 import { Effect, connectSate, Reducer } from './connect'
+import { routerRedux } from 'dva/router';
 
 export interface GlobalStateType {
   collapsed: boolean;
@@ -13,7 +14,8 @@ export interface GlobalDataType {
     modifyCollapsed: Reducer
   },
   effects?: {
-    dealFold: Effect
+    dealFold: Effect,
+    handleGo: Effect
   }
   subscriptions?:{}
 }
@@ -23,7 +25,7 @@ const globalData:GlobalDataType  = {
   namespace: 'globalData',
   state: {
     collapsed: false,
-    indexPath: '/main/bannerList',
+    indexPath: '/main/bannerlist',
   },
   effects: {
     *dealFold(_,{select, put}) {
@@ -32,6 +34,9 @@ const globalData:GlobalDataType  = {
        type: 'modifyCollapsed',
        payload: {collapsed: !collapsed}
      })
+    },
+    *handleGo({payload}, {put}) {
+      yield put(routerRedux.push(payload))
     }
   },
   reducers: {

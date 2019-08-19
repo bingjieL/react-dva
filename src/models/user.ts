@@ -33,15 +33,15 @@ export interface UserType {
 
 
 const User:UserType  = {
-  namespace: 'user',
+  namespace: 'userModel',
   state: {
     userData: {
       title: 'admin',
       isLogin: false,
     },
     userMsg: {
-      userName:'admin',
-      password: 'admin'
+      userName:'',
+      password: ''
     }
   },
   effects: {

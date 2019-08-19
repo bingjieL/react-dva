@@ -18,9 +18,6 @@ class RouterConfig extends  React.Component<any, any>{
       type: 'user/getUserLocal'
     })
   }
-  public componentWillReceiveProps() {
-    
-  }
   render():React.ReactNode {
     return (
         <>
@@ -37,7 +34,7 @@ class RouterConfig extends  React.Component<any, any>{
   }
 }
 
-export default connect(({user, globalData}:connectSate)=>({
-  userData: user.userData,
+export default connect(({userModel, globalData}:connectSate)=>({
+  userData: userModel.userData,
   indexPath: globalData.indexPath
 }))(RouterConfig)  

@@ -1,24 +1,24 @@
 import { Reducer, Effect } from './connect';
-import { GetApi, DeleteApi, AddApi, FindByIdApi, UpdateApi } from 'server/banner'
+import { GetApi, DeleteApi, AddApi, FindByIdApi, UpdateApi } from 'server/blogType'
 import { message } from 'antd';
 
-export interface bannerModelStateType {
+export interface blogTypeModelStateType {
   listData: Array<any>,
   loading: boolean,
   params: any,
   addLoading: boolean,
-  editParams: {bannerTile: string,bannerImg: string}
+  editParams: {blogTypeTile: string,blogTypeImg: string}
 }
 
-export interface bannerModelType<T> {
+export interface blogTypeModelType<T> {
   namespace: string,
   state: T,
   effects?: {
-    getBannerList: Effect,
-    deleteBanner: Effect,
-    addBanner: Effect,
-    getBannerById: Effect,
-    editBanner: Effect
+    getBlogTypeList: Effect,
+    deleteBlogType: Effect,
+    addBlogType: Effect,
+    getBlogTypeById: Effect,
+    editBlogType: Effect
   },
   reducers?: {
     setlistData: Reducer,
@@ -30,20 +30,20 @@ export interface bannerModelType<T> {
 }
 
 
-const bannerModel: bannerModelType<bannerModelStateType> = {
-  namespace: 'bannerModel',
+const blogTypeModel: blogTypeModelType<blogTypeModelStateType> = {
+  namespace: 'blogTypeModel',
   state: {
     listData: [],
     loading: false,
     params: {},
     addLoading: false,
     editParams: {
-      bannerTile: '',
-      bannerImg: '',
+      blogTypeTile: '',
+      blogTypeImg: '',
     }
   },
   effects: {
-    *getBannerList({ payload }, {put, call}) {
+    *getBlogTypeList({ payload }, {put, call}) {
       yield put({
         type: 'changeloading'
       })
@@ -58,16 +58,16 @@ const bannerModel: bannerModelType<bannerModelStateType> = {
       })
      
     },
-    *deleteBanner({payload}, {put, call}) {
+    *deleteBlogType({payload}, {put, call}) {
       const res =  yield call(DeleteApi, payload)
       if(res.data.code !== 200) return
-      message.success('～～ banner删除成功')
+      message.success('～～ blogType删除成功')
       yield put({
-        type: 'getBannerList',
+        type: 'getBlogTypeList',
         payload: {}
       })
     },
-    *addBanner({payload, cb}, {put, call}) {
+    *addBlogType({payload, cb}, {put, call}) {
       yield put({
         type: 'changeEditLoading'
       })
@@ -76,13 +76,13 @@ const bannerModel: bannerModelType<bannerModelStateType> = {
         type: 'changeEditLoading'
       })
       if(res.data.code !== 200) return
-      message.success('～～ banner 添加成功')
+      message.success('～～ blogType 添加成功')
       yield put({
         type: 'clearEditParams'
       })
       cb && cb()
     },
-    *editBanner({payload, cb}, {put, call}) {
+    *editBlogType({payload, cb}, {put, call}) {
       yield put({
         type: 'changeEditLoading'
       })
@@ -91,13 +91,13 @@ const bannerModel: bannerModelType<bannerModelStateType> = {
         type: 'changeEditLoading'
       })
       if(res.data.code !== 200) return
-      message.success('～～ banner 编辑成功')
+      message.success('～～ blogType 编辑成功')
       yield put({
         type: 'clearEditParams'
       })
       cb && cb()
     },
-    *getBannerById({payload}, {put, call}) {
+    *getBlogTypeById({payload}, {put, call}) {
       const res = yield call(FindByIdApi, payload)
       if(res.data.code === 200) {
         yield put({
@@ -144,4 +144,4 @@ const bannerModel: bannerModelType<bannerModelStateType> = {
   
 }
 
-export default bannerModel
+export default blogTypeModel
