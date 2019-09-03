@@ -83,7 +83,7 @@ class BlogList extends React.Component<any, blogListStateType>{
       type:'blogModel/getBlogList'
     })
   }
-  public UNSAFE_componentDidMount() {
+  public componentDidMount() {
     const { dispatch } = this.props
     dispatch({
       type: 'blogModel/getBlogList'

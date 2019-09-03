@@ -9,27 +9,30 @@ import { connectSate } from '../models/connect';
 
 
 class RouterConfig extends  React.Component<any, any>{
-  public UNSAFE_componentDidMount () {
+  public componentDidMount () {
     // console.log('--->this.props.userData', this.props.userData)
   }
-  public UNSAFE_componentWillMount() {
+  public componentWillMount() {
     const { dispatch } = this.props
     let userData = localStorage.getItem('userData')
-    // console.log('>>> userData', userData)
+    console.log('>>> userData', userData)
     dispatch({
       type: 'userModel/changeUserData',
       payload: userData? JSON.parse(userData): {title: '未登陆', isLogin: false}
     })
   }
   render():React.ReactNode {
-    // console.log('>>> this.props.userData', this.props.userData)
+    console.log('>>> this.props.userData', this.props.userData)
+    const userData: any = localStorage.getItem('userData')
+    const _userData = JSON.parse(userData)? JSON.parse(userData) :{title: '未登陆', isLogin: false}
     return (
         <>
           <Switch>
             <Route  path="/main" component={ Main }/>
             <Route  path="/login" component={ Login } />
+
             {
-              !this.props.userData.isLogin
+              !_userData.isLogin
               ? <Redirect to='/login'></Redirect>
               : <Redirect to={this.props.indexPath}></Redirect>
               // <Redirect to={this.props.indexPath}></Redirect> :

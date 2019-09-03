@@ -139,7 +139,7 @@ class HotSwiperEdit extends React.Component<any, hotSwiperStateType>{
     uploadLoading: false,
     bid: ''
   }
-  public UNSAFE_componentWillMount() {
+  public componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
       type: 'hotSwiperModel/clearEditParams'

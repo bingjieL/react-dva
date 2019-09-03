@@ -53,7 +53,7 @@ class BannerList extends React.Component<any, Istate>{
       }
     }]
   }
-  public UNSAFE_componentDidMount() {
+  public componentDidMount() {
     const {dispatch} = this.props
     dispatch({
       type: 'bannerModel/getBannerList',

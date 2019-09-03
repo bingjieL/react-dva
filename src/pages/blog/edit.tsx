@@ -171,8 +171,13 @@ class BlogEdit extends React.Component<any, blogStateType>{
     uploadLoading: false
   }
   public handChangeBannerForm = (value :any) =>  {
-    // const { dispatch} = this.props
-   
+    const { dispatch} = this.props
+    delete value.blogContent
+    if(JSON.stringify(value) === '{}') return
+    dispatch({
+      type: 'blogModel/changeEditData',
+      payload: value
+    })
   }
   public getBlogDetail = (blogId: string) => {
     const {dispatch} = this.props
@@ -181,7 +186,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
       payload: {blogId}
     })
   }
-  public UNSAFE_componentWillMount() {
+  public componentWillMount() {
     const {dispatch} = this.props
     dispatch({
       type: 'blogModel/clearEditData'

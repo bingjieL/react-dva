@@ -165,7 +165,7 @@ class BookEdit extends React.Component<any, bookStateType>{
     uploadLoading: false,
     bid: ''
   }
-  public UNSAFE_componentWillMount() {
+  public componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
       type: 'bookModel/clearEditParams'

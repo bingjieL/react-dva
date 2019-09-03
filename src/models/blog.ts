@@ -85,7 +85,7 @@ const BanenrModel: blogModelType<blogModelStateType> = {
         payload: res.data.data.rows
       })
     },
-    *getBlogDetail({payload}, {put, call}) {
+    *getBlogDetail({payload, cb}, {put, call}) {
       const res = yield call(FindByIdApi, payload)
       console.log('>>> byId blog Detail', res)
       if(res.data.code !== 200) return
@@ -93,6 +93,7 @@ const BanenrModel: blogModelType<blogModelStateType> = {
         type: 'changeEditData',
         payload: res.data.data
       })
+      cb && cb(res.data.data.blogImg)
     },
     *updateBlog({cb}, {put, call, select}) {
       const payload = yield select(state => state.blogModel.editData)
