@@ -22,6 +22,7 @@ class BlogList extends React.Component<any, blogListStateType>{
       title: '日期',
       dataIndex: 'updated_time',
       key: 'updated_time',
+      width: 120,
       render: (text: string) => {
         return <span>{text.substring(0, 10)}</span> 
       }
@@ -82,7 +83,7 @@ class BlogList extends React.Component<any, blogListStateType>{
       type:'blogModel/getBlogList'
     })
   }
-  public componentDidMount() {
+  public UNSAFE_componentDidMount() {
     const { dispatch } = this.props
     dispatch({
       type: 'blogModel/getBlogList'

@@ -157,7 +157,7 @@ class MusicSheetEdit extends React.Component<any, musicSheetStateType>{
     uploadLoading: false,
     bid: ''
   }
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
       type: 'musicSheetModel/clearEditParams'

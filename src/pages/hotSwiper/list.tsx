@@ -54,7 +54,7 @@ class HotSwiperList extends React.Component<any, hotSwiperStateType> {
       }
     }]
   }
-  public componentDidMount() {
+  public UNSAFE_componentDidMount() {
     const {dispatch} = this.props
     dispatch({
       type: 'hotSwiperModel/getHotSwiperList'

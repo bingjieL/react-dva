@@ -58,7 +58,7 @@ class BookList extends React.Component<any, bookStateType> {
       }
     }]
   }
-  public componentDidMount() {
+  public UNSAFE_componentDidMount() {
     const {dispatch} = this.props
     dispatch({
       type: 'bookModel/getBookList'

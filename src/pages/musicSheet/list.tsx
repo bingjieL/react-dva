@@ -63,7 +63,7 @@ class MusicSheetList extends React.Component<any, musicSheetStateType> {
       }
     }]
   }
-  public componentDidMount() {
+  public UNSAFE_componentDidMount() {
     const {dispatch} = this.props
     dispatch({
       type: 'musicSheetModel/getMusicSheetList'

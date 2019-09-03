@@ -151,7 +151,6 @@ const BanenrModel: blogModelType<blogModelStateType> = {
       }
     },
     changeEditData(state, {payload}) {
-      console.log('---> payload',  payload)
       return {
         ...state,
         editData: Object.assign(state.editData, payload)

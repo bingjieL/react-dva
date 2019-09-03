@@ -94,7 +94,7 @@ class Layout extends React.Component<any, IState> {
       key: 'changePw'
     }]
   }
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     this.getRenderRoute()
     this.updateSelectKey()  
     const speRoute = this.getSpeRoute()

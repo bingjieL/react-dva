@@ -121,7 +121,7 @@ class BannerEdit extends React.Component<any, bannerStateType>{
     uploadLoading: false,
     bid: ''
   }
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
       type: 'bannerModel/clearEditParams'

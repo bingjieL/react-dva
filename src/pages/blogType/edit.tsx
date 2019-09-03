@@ -81,7 +81,7 @@ class BlogTypeEdit extends React.Component<any, blogTypeStateType>{
     uploadLoading: false,
     bid: ''
   }
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     // console.log('>> props', this.props)
     this.props.dispatch({
       type: 'blogTypeModel/clearEditParams'

@@ -181,7 +181,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
       payload: {blogId}
     })
   }
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     const {dispatch} = this.props
     dispatch({
       type: 'blogModel/clearEditData'
@@ -206,6 +206,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
     }else if(info.file.status === 'done') {
       const res = info.file.response
       let blogImg = ''
+      
       if(res.code === 200 ){
         message.success('～～ 图片上传成功！！')
         blogImg = res.data.url
@@ -216,7 +217,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
         uploadLoading: false
       })
       this.props.dispatch({
-        type: 'bannerModel/changeEditData',
+        type: 'blogModel/changeEditData',
         payload: {
           blogImg          
         }
@@ -255,6 +256,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
         addLoading = {this.props.editLoading}
         goBack = {this.goBack}
         saveEditData = {this.saveEditData}
+        handleUplodChange = {this.handleUplodChange}
         handChangeBannerForm = {this.handChangeBannerForm}
       ></CEditForm>
     </div>)
