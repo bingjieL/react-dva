@@ -1,5 +1,5 @@
 import { Reducer, Effect } from './connect';
-import { GetApi, AddApi, GetBlogTypeApi, UpdateApi, FindByIdApi, DeleteApi} from '../server/blog'
+import { GetApi, AddApi, GetBlogTypeApi, UpdateApi, FindByIdApi, DeleteApi, ChangeStatusApi} from '../server/blog'
 import { message } from 'antd';
 export interface blogModelStateType {
   listLoading: boolean,
@@ -32,6 +32,7 @@ export interface  blogModelType<T> {
     updateBlog: Effect,
     addBlog: Effect,
     deleteBlog: Effect,
+    changeBlogStatus: Effect
   },
   reducers: {
     changeListData: Reducer,
@@ -122,7 +123,18 @@ const BanenrModel: blogModelType<blogModelStateType> = {
         type: 'getBlogList',
         payload: searchParams
       })
+    },
+    *changeBlogStatus({payload}, {put, call, select}) {
+      const res = yield call(ChangeStatusApi, payload)
+      if(res.data.code !== 200) return
+      message.success('~~ 博客状态更新成功')
+      const {searchParams} = yield select(state => state.blogModel)
+      yield put({
+        type: 'getBlogList',
+        payload: searchParams
+      })
     }
+    
   },
   reducers: {
     changeListData(state, { payload }) {

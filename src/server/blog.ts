@@ -26,3 +26,8 @@ export const FindByIdApi = (params: object) => {
 export const DeleteApi = (params: object) => {
   return Reuqest.post(`${apiUrl}/api/blog/delete`, params)
 }
+
+export const ChangeStatusApi = (params: object) => {
+  return Reuqest.post(`${apiUrl}/api/blog/changeStatus`, params)
+
+}

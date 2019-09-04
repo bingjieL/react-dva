@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { connectSate } from '../../models/connect';
-import { Button, Popconfirm, Table} from 'antd'
+import { Button, Popconfirm, Table, Tag} from 'antd'
 import style from './list.less'
 
 
@@ -31,8 +31,16 @@ class BlogList extends React.Component<any, blogListStateType>{
       dataIndex: 'blogId',
       key: 'blogId'
     },{
+      title: '状态',
+      dataIndex: 'blogStatus',
+      key: 'blogStatus',
+      render:(text: number) => {
+        return text === 1? (<Tag color="volcano">已发布</Tag>) : (<Tag color="cyan">已下架</Tag>)
+      }
+    },{
       title: '标题',
       dataIndex: 'blogTitle',
+      width: 200,
       key: 'blogTitle'
     },{
       title: '类别',
@@ -50,12 +58,20 @@ class BlogList extends React.Component<any, blogListStateType>{
     },{
       title: '操作',
       dataIndex: 'action',
+      width: 200,
       render: (_: any, record:any) => {
         return (<>
+          {
+            record.blogStatus === 1 ? (
+              <Button type="link" onClick= {()=> this.changeblogStatus(record.blogId, 2)}> 下架 </Button>
+            ) : (
+              <Button type="link" onClick= {()=> this.changeblogStatus(record.blogId, 1)}> 发布 </Button>
+            )
+          }
+          <Button icon="edit" type="link" onClick= {()=> this.goEdit(record.blogId)}></Button>
           <Popconfirm title="确认删除本条数据吗？" onConfirm = {()=> this.handleDelete(record.blogId)} okText="Yes" cancelText="No">
             <span style={{color: '#f5222d',cursor: 'pointer'}}>Delete</span>
           </Popconfirm>
-          <Button icon="edit" type="link" onClick= {()=> this.goEdit(record.blogId)}></Button>
         </>)
       }
     }]
@@ -63,6 +79,16 @@ class BlogList extends React.Component<any, blogListStateType>{
   public goEdit = (blogId?: string) => {
     this.props.history.push({
       pathname: blogId ?`/main/blogEdit/${blogId}` : '/main/blogAdd'
+    })
+  }
+  public changeblogStatus = (blogId: string, blogStatus: number) => {
+    const { dispatch } = this.props
+    dispatch({
+      type: 'blogModel/changeBlogStatus',
+      payload: {
+        blogId,
+        blogStatus
+      }
     })
   }
   public handleDelete = (blogId: string) => {
