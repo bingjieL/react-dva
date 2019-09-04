@@ -5,6 +5,7 @@ import style from './braftEditor.less'
 import { uploadImgUrl } from 'server/urlconfig'
 
 const MyBraftEditor: React.FC<any> = (props:any) => {
+  const {valiDateForm} = props
   const uploadFn = (param: any) => {
     const serverURL = uploadImgUrl
     const xhr = new XMLHttpRequest()
@@ -54,6 +55,7 @@ const MyBraftEditor: React.FC<any> = (props:any) => {
         className={style.editorWrap}
         // defaultValue = {value}
         // value = {value}
+        onSave = {()=> valiDateForm('save')}
         media = {media}
         // onChange={this.handleEditorChange}
       ></BraftEditor>

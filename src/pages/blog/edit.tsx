@@ -39,10 +39,10 @@ const EditForm: React.FC<any> = (props) => {
     !is3M && message.error('图片大小不能超过3M')
     return is3M
   }
-  const valiDateForm: ()=> void = ()=> {
+  const valiDateForm: (type: string)=> void = (type)=> {
+    // console.log('>>> type', type)
     props.form.validateFields((err: any, fieldValue: any) => {
-      console.log(err,fieldValue)
-      !err && saveEditData(fieldValue)
+      !err && saveEditData(fieldValue, type)
     })
   }
   const uploadButton = (
@@ -115,12 +115,12 @@ const EditForm: React.FC<any> = (props) => {
           },]
         })(
           // 采用组件方式引入不能够触发Form的anchangeValue方法 所以采用函数
-          MyBraftEditor({})
+          MyBraftEditor({valiDateForm})
         )}
     </Form.Item>
     <Row>
       <Col offset={3}>
-        <Button type="primary" loading={addLoading} onClick={valiDateForm}>
+        <Button type="primary" loading={addLoading} onClick={ () => valiDateForm('update')}>
            {bid? '保存' : '立即创建'} 
         </Button>
         <Button style={{marginLeft: '50px'}} onClick={ goBack }>
@@ -229,7 +229,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
       })
     }
   }
-  public saveEditData = (editData: any)=> {
+  public saveEditData = (editData: any, type: string)=> {
     const {bid} = this.state
     const {dispatch} = this.props
     dispatch({
@@ -239,13 +239,13 @@ class BlogEdit extends React.Component<any, blogStateType>{
     bid && dispatch({
       type: 'blogModel/updateBlog',
       cb:() => {
-        this.goBack()
+        type === 'update' && this.goBack()
       }
     })
     !bid && dispatch({
       type: 'blogModel/addBlog',
       cb:() => {
-        this.goBack()
+        type === 'update' && this.goBack()
       }
     })
   }
