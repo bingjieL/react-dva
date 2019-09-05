@@ -3,9 +3,19 @@ import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import style from './braftEditor.less'
 import { uploadImgUrl } from 'server/urlconfig'
+import { throttle } from '../utils/index';
 
 const MyBraftEditor: React.FC<any> = (props:any) => {
   const {valiDateForm} = props
+  const throttleCb = (options?:any) => {
+    // console.log('>>> 成功')
+    valiDateForm('save')
+  }
+  const _throttle = throttle(1500, throttleCb)
+  const handleSave = () => {
+    // console.log('>>> 点击')
+    _throttle()
+  }
   const uploadFn = (param: any) => {
     const serverURL = uploadImgUrl
     const xhr = new XMLHttpRequest()
@@ -55,7 +65,7 @@ const MyBraftEditor: React.FC<any> = (props:any) => {
         className={style.editorWrap}
         // defaultValue = {value}
         // value = {value}
-        onSave = {()=> valiDateForm('save')}
+        onSave = {handleSave}
         media = {media}
         // onChange={this.handleEditorChange}
       ></BraftEditor>

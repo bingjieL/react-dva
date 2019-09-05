@@ -112,7 +112,7 @@ const BanenrModel: blogModelType<blogModelStateType> = {
       yield put({type: 'changeEditLoading'})
       if(res.data.code !== 200) return
       message.success('~~ 博客添加成功')
-      cb && cb()
+      cb && cb(res.data.data.blogId) 
     },
     *deleteBlog({payload}, {put, call, select}) {
       const res = yield call(DeleteApi, payload)

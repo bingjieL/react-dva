@@ -22,7 +22,7 @@ const Header: React.FC<any> = (props) => {
 }
 //edit Form
 const EditForm: React.FC<any> = (props) => {
-  const { handleUplodChange, blogImg, uploadLoading, saveEditData, addLoading, bid, goBack, typeList} = props
+  const { handleUplodChange, blogImg, uploadLoading, saveEditData, editLoading, bid, goBack, typeList} = props
   const { getFieldDecorator } = props.form;
   const formItemLayout = {
     labelCol: {
@@ -120,7 +120,7 @@ const EditForm: React.FC<any> = (props) => {
     </Form.Item>
     <Row>
       <Col offset={3}>
-        <Button type="primary" loading={addLoading} onClick={ () => valiDateForm('update')}>
+        <Button type="primary" loading={editLoading} onClick={ () => valiDateForm('update')}>
            {bid? '保存' : '立即创建'} 
         </Button>
         <Button style={{marginLeft: '50px'}} onClick={ goBack }>
@@ -244,7 +244,12 @@ class BlogEdit extends React.Component<any, blogStateType>{
     })
     !bid && dispatch({
       type: 'blogModel/addBlog',
-      cb:() => {
+      cb:(blogId?: string) => {
+        if(blogId){
+          this.setState({
+            bid: blogId
+          })
+        }
         type === 'update' && this.goBack()
       }
     })
@@ -258,7 +263,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
         bid = {this.state.bid}
         typeList = {this.props.blogModel.typeList}
         uploadLoading = {this.state.uploadLoading}
-        addLoading = {this.props.editLoading}
+        editLoading = {this.props.editLoading}
         goBack = {this.goBack}
         saveEditData = {this.saveEditData}
         handleUplodChange = {this.handleUplodChange}
