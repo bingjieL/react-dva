@@ -263,7 +263,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
         bid = {this.state.bid}
         typeList = {this.props.blogModel.typeList}
         uploadLoading = {this.state.uploadLoading}
-        editLoading = {this.props.editLoading}
+        editLoading = {this.props.blogModel.editLoading}
         goBack = {this.goBack}
         saveEditData = {this.saveEditData}
         handleUplodChange = {this.handleUplodChange}
