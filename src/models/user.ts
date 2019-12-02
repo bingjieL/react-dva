@@ -11,6 +11,7 @@ export interface userDataType {
   
 }
 export interface UserStateType {
+  loginLoading: boolean;
   userData: userDataType;
   userMsg: {password: string, userName: string}
 }
@@ -22,7 +23,8 @@ export interface UserType {
   reducers?: {
     resetUserMsg: Reducer,
     changeUserMsg: Reducer,
-    changeUserData: Reducer
+    changeUserData: Reducer,
+    changeLoginLoading: Reducer,
   },
   effects?: {
     apiLogin: Effect,
@@ -35,6 +37,7 @@ export interface UserType {
 const User:UserType  = {
   namespace: 'userModel',
   state: {
+    loginLoading: false,
     userData: {
       title: 'admin',
       isLogin: false,
@@ -46,8 +49,19 @@ const User:UserType  = {
   },
   effects: {
     *apiLogin({payload}, {put, call, select}) {
+      yield put({
+        type: 'changeLoginLoading',
+        payload : {
+          loading: true
+        }
+      }) 
       const login_res =  yield call(ApiLogin, payload)
-      console.log('login_res', login_res)
+      yield put({
+        type: 'changeLoginLoading',
+        payload : {
+          loading: false
+        }
+      }) 
       if(login_res.status === 200 && login_res.data.code === 200) {
           let data = login_res.data.data
           let userData =  {
@@ -92,6 +106,13 @@ const User:UserType  = {
       return{
         ...state,
         userData: payload
+      }
+    },
+    changeLoginLoading(state, { payload }) {
+      console.log('>>> loading', payload)
+      return {
+        ...state,
+        loginLoading: payload.loading
       }
     }
   }

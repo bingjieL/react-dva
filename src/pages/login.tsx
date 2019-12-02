@@ -9,12 +9,16 @@ interface Istate {
   documenttitle: string
 }
 interface FormProps {
-  userName: string, password: string, form?: any,handleLogin:(fieldsValue: any)=>void, handChangeUserMsg:(value: any) => void
+  userName: string;
+  password: string;
+  loginLoading: boolean;
+  form?: any,handleLogin:(fieldsValue: any)=>void, handChangeUserMsg:(value: any) => void
 }
 
 
 const LoginForm: React.FC<FormProps> = (props) => {
   const { getFieldDecorator } = props.form;
+  const { loginLoading } = props;
   const handleLogin: ()=> void = () => {
     props.form.validateFields((err: any, fieldsValue: any) => {
      !err && props.handleLogin(fieldsValue)
@@ -44,7 +48,7 @@ const LoginForm: React.FC<FormProps> = (props) => {
         )}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" onClick={handleLogin} style={{width: '100%'}}>
+        <Button type="primary" loading= {loginLoading} onClick={handleLogin} style={{width: '100%'}}>
           登陆
         </Button>
       </Form.Item>
@@ -100,6 +104,7 @@ class Login extends React.Component<any, Istate> {
           </header>
           <div className={style.form}>
             <CloginForm
+              loginLoading = {this.props.loginLoading}
               {...this.props.userMsg}
               handleLogin = {this.handleLogin}
               handChangeUserMsg = {this.handChangeUserMsg}
@@ -114,5 +119,6 @@ class Login extends React.Component<any, Istate> {
 
 export default connect(({userModel}: connectSate)=>({
   userData: userModel.userData,
-  userMsg: userModel.userMsg
+  userMsg: userModel.userMsg,
+  loginLoading: userModel.loginLoading
 }))(Login) 

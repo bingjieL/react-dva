@@ -105,13 +105,20 @@ const EditForm: React.FC<any> = (props) => {
     <Form.Item label="Blog Content"  wrapperCol= {{xs: {span: 18}, sm: {span: 18}}}>
       {getFieldDecorator('blogContent', {
           validateTrigger: 'onBlur',
-          getValueFromEvent: (value: any) => {
-            if (value.isEmpty()) return null
-            return value.toHTML()
-          },
+          // getValueFromEvent: (value: any) => {
+          //   if (value.isEmpty()) return null
+          //   return value.toHTML()
+          // },
           rules: [{
             required: true,
-            message: '请填写博客内容'
+            message: '请填写博客内容',
+            validator: (_: any, value: any, callback: any) => {
+              if (value.isEmpty()) {
+                callback('请输入正文内容')
+              } else {
+                callback()
+              }
+            }
           },]
         })(
           // 采用组件方式引入不能够触发Form的anchangeValue方法 所以采用函数
@@ -172,7 +179,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
   }
   public handChangeBannerForm = (value :any) =>  {
     const { dispatch} = this.props
-    delete value.blogContent
+    // delete value.blogContent
     if(JSON.stringify(value) === '{}') return
     dispatch({
       type: 'blogModel/changeEditData',
