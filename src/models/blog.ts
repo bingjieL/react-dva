@@ -98,6 +98,9 @@ const BanenrModel: blogModelType<blogModelStateType> = {
     },
     *updateBlog({cb}, {put, call, select}) {
       const payload = yield select(state => state.blogModel.editData)
+      if(!payload.blogContent.isEmpty()) {
+        payload.blogContent = payload.blogContent.toHTML()
+      } 
       yield put({type: 'changeEditLoading'})
       const res = yield call(UpdateApi, payload)
       yield put({type: 'changeEditLoading'})
@@ -110,7 +113,7 @@ const BanenrModel: blogModelType<blogModelStateType> = {
       if(!payload.blogContent.isEmpty()) {
         payload.blogContent = payload.blogContent.toHTML()
       } 
-      console.log('>>> blog params', payload)
+      // console.log('>>> blog params', payload)
       yield put({type: 'changeEditLoading'})
       const res = yield call(AddApi, payload)
       yield put({type: 'changeEditLoading'})

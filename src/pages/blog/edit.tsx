@@ -179,6 +179,7 @@ class BlogEdit extends React.Component<any, blogStateType>{
   }
   public handChangeBannerForm = (value :any) =>  {
     const { dispatch} = this.props
+    // console.log('>>> value', value)
     // delete value.blogContent
     if(JSON.stringify(value) === '{}') return
     dispatch({
