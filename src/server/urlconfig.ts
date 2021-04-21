@@ -1,7 +1,7 @@
 
 export const isProduct: boolean = process.env.NODE_ENV === 'production' ? true : false
 
-export const apiUrl: string =  isProduct ?  'http://api.8bjl.cn': 'http://api.8bjl.cn';
+export const apiUrl: string =  isProduct ?  'http://api.8bjl.cn': 'http://localhost:3030';
 
 export const uploadImgUrl: string = `${apiUrl}/api/upFiles`
 

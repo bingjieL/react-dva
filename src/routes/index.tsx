@@ -14,7 +14,7 @@ class RouterConfig extends  React.Component<any, any>{
   }
   public componentWillMount() {
     const { dispatch } = this.props
-    let userData = localStorage.getItem('userData')
+    let userData = localStorage.getItem('bj_blog_userData')
     console.log('>>> userData', userData)
     dispatch({
       type: 'userModel/changeUserData',
@@ -22,21 +22,11 @@ class RouterConfig extends  React.Component<any, any>{
     })
   }
   render():React.ReactNode {
-    console.log('>>> this.props.userData', this.props.userData)
-    const userData: any = localStorage.getItem('userData')
-    const _userData = JSON.parse(userData)? JSON.parse(userData) :{title: '未登陆', isLogin: false}
     return (
         <>
           <Switch>
             <Route  path="/main" component={ Main }/>
             <Route  path="/login" component={ Login } />
-
-            {
-              !_userData.isLogin
-              ? <Redirect to='/login'></Redirect>
-              : <Redirect to={this.props.indexPath}></Redirect>
-              // <Redirect to={this.props.indexPath}></Redirect> :
-            }
           </Switch>
         </>
     );

@@ -27,6 +27,7 @@ const MyHeader: React.FC<any> = props=> {
           title: '登出提示',
           content: '点击确认将退出登陆！',
           onOk: ()=> {
+            
             go('/login')
           }
         });
@@ -102,6 +103,11 @@ class Layout extends React.Component<any, IState> {
     this.handleOpenChange(defaultOpenKeys, true)
   }
   public handleGo = (pathName: string):void => {
+    window.localStorage.removeItem('bj_blog_userData');
+    this.props.dispatch({
+      type: 'userModel/changeUserData',
+      payload: {title: '未登陆', isLogin: false}
+    })
     this.props.history.push(pathName)
   }
   public getRenderRoute = ()=> {
@@ -165,12 +171,12 @@ class Layout extends React.Component<any, IState> {
               <main className={style.routeMainWrap}>
                 <div className={style.routeMain}>
                   <Switch>
-                    {this.routes.map((item) =>
-                      <Route path={item.path} key={item.path} component={item.component}/>
-                    )}
                     {
                       !this.props.userData.isLogin && <Redirect to='/login' />
                     }
+                    {this.routes.map((item) =>
+                      <Route path={item.path} key={item.path} component={item.component}/>
+                    )}
                     <Route  path="/403" component={ Nopermission } />
                     <Route  path="/404" component={ NoPage } />
                     <Route  path="*" component={ NoPage } />

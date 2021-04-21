@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2019-07-12 16:08:21
+ * @LastEditTime: 2021-04-21 13:54:02
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /blog-server/Users/apple/work/own-work/react-dva/src/index.js
+ */
 import "babel-polyfill";
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
@@ -30,3 +38,6 @@ app.start('#root')
 // unregister() to register() below. Note this comes with some pitfalls.
 
 serviceWorker.unregister();
+
+
+export const store = app._store;

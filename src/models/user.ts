@@ -4,11 +4,11 @@ import { ApiLogin } from '../server/user';
 import { routerRedux } from 'dva/router'
 
 export interface userDataType {
-  title: string,
-  userId?: string,
-  imgUrl?: string,
-  isLogin: boolean,
-  
+  title: string;
+  userId?: string;
+  imgUrl?: string;
+  isLogin: boolean;
+  token?: string;
 }
 export interface UserStateType {
   loginLoading: boolean;
@@ -66,14 +66,15 @@ const User:UserType  = {
           let data = login_res.data.data
           let userData =  {
             title: data.userName,
-            isLogin: true
+            isLogin: true,
+            token: data.token,
           }
           yield put({
             type: 'changeUserData',
             payload: userData
           })
           const {indexPath} = yield select((state: connectSate) => state.globalData)
-          window.localStorage.setItem('userData', JSON.stringify(userData))
+          window.localStorage.setItem('bj_blog_userData', JSON.stringify(userData))
           yield put(routerRedux.push(indexPath)) 
           yield put({
             type: 'resetUserMsg'
@@ -81,7 +82,7 @@ const User:UserType  = {
       }
     },
     *getUserLocal({cb}, { put }) {
-      let userData = localStorage.getItem('userData')
+      let userData = localStorage.getItem('bj_blog_userData')
       if(!userData || !JSON.parse(userData) ) {
         cb && cb()
       }
